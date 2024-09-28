@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{APPNAME}</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+        * {
+            font-family: "Roboto", sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0f0f0f;
+        }
+
+        .navbar_container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background-color: #0f0f0f;
+            z-index: 9999;
+        }
+
+        .navbar {
+            height: 100%;
+            width: 98%;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .logo_container {
+            text-decoration: none;
+            height: 100%;
+            width: fit-content;
+            display: flex;
+        }
+
+        .logo_img {
+            height: 80%;
+            aspect-ratio: 1;
+            margin: auto 0;
+        }
+
+        .logo_title {
+            color: white;
+            font-weight: 800;
+            font-size: 1.6rem;
+            letter-spacing: -1px;
+            margin: auto 0 auto 3px;
+        }
+
+        .user_controls {
+            height: 100%;
+            width: fit-content;
+            display: flex;
+        }
+
+        .upload_video_action_container {
+            height: 100%;
+            width: fit-content;
+        }
+
+        .user_settings_container {
+            height: 100%;
+            width: fit-content;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+        .user_profile_img_container {
+            height: 60%;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            position: relative;
+            top: 50%;
+            transform: translate(0, -50%);
+            overflow: hidden;
+        }
+
+        .user_icon {
+            width: 100%;
+            height: 100%;
+        }
+
+        .upload_video_button {
+            position: relative;
+            top: 50%;
+            transform: translate(0, -50%);
+            height: 40px;
+            width: 40px;
+            background-color: transparent;
+            cursor: pointer;
+            border-radius: 50%;
+            border: none;
+            padding: 7px;
+        }
+
+        .upload_video_button:hover {
+            background-color: #2b2b2b;
+        }
+
+        .search_container {
+            position: relative;
+            top: 50%;
+            transform: translate(0, -50%);
+            max-width: 600px;
+            width: 100%;
+            height: 80%;
+            margin: 0 10px;
+            display: flex;
+            align-items: center;
+            border: 2px solid #2b2b2b;
+            border-radius: 25px;
+            padding: 5px;
+            overflow: hidden;
+        }
+
+        .search_input {
+            flex-grow: 1;
+            border: none;
+            outline: none;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 25px;
+            background-color: transparent;
+            color: #ffffff;
+        }
+
+        .search_btn {
+            position: relative;
+            transform: translate(20%, 0);
+            background-color: #2b2b2b;
+            height: 50px;
+            width: 50px;
+            min-width: 50px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .search-icon {
+            flex-shrink: 0;
+            position: relative;
+            transform: translate(-15%, 0);
+            height: 20px;
+            width: 20px;
+            color: white;
+        }
+
+        .main_page_content {
+            padding: 80px 30px;
+        }
+
+        .videos_grid_container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            color: white;
+        }
+
+        .video_item_container_href {
+            text-decoration: none;
+            color: white;
+        }
+
+        .video_item_container {
+            padding: 10px;
+            border-radius: 8px;
+            transition: transform 0.1s ease;
+            cursor: pointer;
+        }
+
+        .video_item_container:hover {
+            transform: translateY(-5px);
+        }
+
+        .video_thumbnail_container {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%;
+            background-color: #2b2b2b;
+            overflow: hidden;
+            border-radius: 6px;
+        }
+
+        .video_thumbnail {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            background-color: #2b2b2b;
+        }
+
+        .video_metadata_container {
+            width: 100%;
+            margin-top: 4px;
+            display: flex;
+        }
+
+        .video_metadata {
+            margin-left: 10px;
+            width: 100%;
+        }
+
+        .video_title {
+            font-size: 18px;
+            width: 90%;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .video_creator_name {
+            font-size: 14px;
+            width: 70%;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            color: #aaaaaa;
+        }
+
+        .video_views {
+            font-size: 14px;
+            width: 70%;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            color: #aaaaaa;
+        }
+
+        .video_creator_profile_picture_container {
+            height: 30px;
+            min-height: 30px;
+            width: 30px;
+            min-width: 30px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .video_creator_profile_picture {
+            width: 100%;
+            height: 100%;
+        }
+
+        .username_dialog_container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .username_dialog {
+            background-color: #0f0f0f;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            text-align: center;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .username_dialog_text_field {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            background-color: #2b2b2b;
+            color: #ffffff;
+            border: none;
+            outline: none;
+        }
+
+        .dialog_actions {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .submit_username_btn {
+            padding: 10px 15px;
+            border: none;
+            background-color: #2ecc71;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .submit_username_btn:hover {
+            background-color: #27ae60;
+        }
+
+        .close_username_btn {
+            padding: 10px 15px;
+            border: none;
+            background-color: #a11f1f;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .close_username_btn:hover {
+            background-color: #881616;
+        }
+
+        .upload_video_dialog_container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 800;
+        }
+
+        .upload_video_dialog {
+            background-color: #0f0f0f;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 400px;
+            text-align: center;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .video_input_container {
+            margin: 10px 0;
+        }
+
+        .upload_video_input {
+            margin-bottom: 15px;
+        }
+
+        .upload_video_title,
+        .upload_video_description {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            font-size: 16px;
+            resize: none;
+            background-color: #2b2b2b;
+            color: #ffffff;
+            border: none;
+            outline: none;
+        }
+
+        .upload_video_title:disabled,
+        .upload_video_description:disabled {
+            cursor: not-allowed;
+        }
+
+        .upload_video_dialog_actions {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .upload_video_btn {
+            padding: 10px 15px;
+            border: none;
+            background-color: #156ec2;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .upload_video_btn:hover {
+            background-color: #102e70;
+        }
+
+        .submit_video_btn {
+            padding: 10px 15px;
+            border: none;
+            background-color: #2ecc71;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .submit_video_btn:hover:not(:disabled) {
+            background-color: #27ae60;
+        }
+
+        .close_video_upload_btn {
+            padding: 10px 15px;
+            border: none;
+            background-color: #a11f1f;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .close_video_upload_btn:hover {
+            background-color: #881616;
+        }
+
+        .close_video_upload_btn:disabled,
+        .submit_video_btn:disabled {
+            background-color: #7f8c8d;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="navbar_container">
+        <div class="navbar">
+            <a class="logo_container" href="{DOMAIN}">
+                <img class="logo_img" src="{STATIC_DIR}/bashtube_logo.png" alt="bashtube_logo.png">
+                <div class="logo_title">{APPNAME}</div>
+            </a>
+            <div class="search_container">
+                <input type="text" placeholder="Search" id="search_input" class="search_input" value="{CONTEXT.search.query}">
+                <button class="search_btn" id="search_btn" onclick="navigateToSearchPage()">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                        class="search-icon">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" />
+                    </svg>
+                </button>
+            </div>
+            <div class="user_controls">
+                <div class="upload_video_action_container">
+                    <button id="upload_video_button" class="upload_video_button">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24"
+                            style="pointer-events: none; display: inherit; width: 100%; height: 100%;"
+                            viewBox="0 0 24 24" width="24" focusable="false" aria-hidden="true">
+                            <path fill="#FFFFFF"
+                                d="M14 13h-3v3H9v-3H6v-2h3V8h2v3h3v2zm3-7H3v12h14v-6.39l4 1.83V8.56l-4 1.83V6m1-1v3.83L22 7v8l-4-1.83V19H2V5h16z">
+                            </path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="user_settings_container" id="user_settings_container">
+                    <div class="user_profile_img_container">
+                        <img class="user_icon" src="{STORAGE}/{CONTEXT.current_user.profile_picture}"
+                            alt="{STORAGE}/{CONTEXT.current_user.profile_picture}">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main_page_content">
+        <div class="videos_grid_container">
+            {#for video in CONTEXT.videos}
+            <a class="video_item_container_href" href="{DOMAIN}/videos/{video.id}">
+                <div class="video_item_container">
+                    <div class="video_thumbnail_container">
+                        <img src="{STORAGE}/{video.thumbnail_path}" alt="{video.thumbnail_path}"
+                        class="video_thumbnail">
+                    </div>
+                    <div class="video_metadata_container">
+                        <div class="video_creator_profile_picture_container">
+                            <img src="{STORAGE}/{video.creator_profile_picture}"
+                                alt="{STORAGE}/{video.creator_profile_picture}" class="video_creator_profile_picture">
+                        </div>
+                        <div class="video_metadata">
+                            <div class="video_title">{video.title}</div>
+                            <div class="video_creator_name">{video.creator_username}</div>
+                            <div class="video_views">{video.views} views</div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            {/for}
+        </div>
+    </div>
+
+    <div id="username_dialog_container" class="username_dialog_container">
+        <div class="username_dialog">
+            <input type="text" id="username_field" class="username_dialog_text_field"
+                placeholder="Enter your username" />
+            <div class="dialog_actions">
+                <button class="submit_username_btn" id="submit_username_btn">Submit</button>
+                <button class="close_username_btn" id="close_username_btn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="upload_video_dialog_container" class="upload_video_dialog_container">
+        <div class="upload_video_dialog">
+            <div class="video_input_container">
+                <input type="file" id="upload_video_input" class="upload_video_input" accept="video/*" />
+                <p id="video_upload_message"></p>
+            </div>
+            <div id="video_details_form" class="video_details_form" style="display: none;">
+                <input type="text" id="upload_video_title" class="upload_video_title" placeholder="Video title"
+                    disabled />
+                <textarea id="upload_video_description" class="upload_video_description" placeholder="Video description"
+                    disabled></textarea>
+            </div>
+
+            <div class="upload_video_dialog_actions">
+                <button id="upload_video_btn" class="upload_video_btn">Upload</button>
+                <button id="submit_video_btn" class="submit_video_btn" disabled>Submit</button>
+                <button id="close_video_upload_btn" class="close_video_upload_btn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const searchInput = document.getElementById('search_input');
+
+        const navigateToSearchPage = () => {
+            if(searchInput.value.length < 1) return;
+            const query=btoa(searchInput.value);
+            window.location.href=`{DOMAIN}/search/?q=${query}`
+        }
+        
+        const userSettings = document.getElementById('user_settings_container');
+        const usernameDialog = document.getElementById('username_dialog_container');
+        const closeUsernameBtn = document.getElementById('close_username_btn');
+        const submitUsernameBtn = document.getElementById('submit_username_btn');
+        const usernameField = document.getElementById('username_field');
+
+        userSettings.addEventListener('click', () => {
+            if (localStorage.getItem("current_user") !== null) {
+                usernameField.value = localStorage.getItem("current_user");
+            } else {
+                usernameField.value = '';
+            }
+
+            usernameDialog.style.display = 'flex';
+        });
+
+        closeUsernameBtn.addEventListener('click', () => {
+            usernameDialog.style.display = 'none';
+        });
+
+        submitUsernameBtn.addEventListener('click', () => {
+            const username = usernameField.value;
+
+            if (username) {
+                usernameDialog.style.display = 'none'
+                localStorage.setItem("current_user", username)
+            } else {
+                alert('Please enter a username');
+            }
+        });
+        
+        const openUploadVideoDialogBtn = document.getElementById('upload_video_button');
+        const uploadVideoDialog = document.getElementById('upload_video_dialog_container');
+        const uploadVideoBtn = document.getElementById('upload_video_btn');
+        const submitVideoBtn = document.getElementById('submit_video_btn');
+        const closeVideoUploadBtn = document.getElementById('close_video_upload_btn');
+        const uploadVideoInput = document.getElementById('upload_video_input');
+        const videoUploadMessage = document.getElementById('video_upload_message');
+        const uploadVideoTitle = document.getElementById('upload_video_title');
+        const uploadVideoDescription = document.getElementById('upload_video_description');
+        const videoDetailsForm = document.getElementById('video_details_form');
+
+        var uploadedVideoPath;
+
+        openUploadVideoDialogBtn.addEventListener('click', () => {
+            uploadVideoDialog.style.display = 'flex';
+        });
+
+        closeVideoUploadBtn.addEventListener('click', () => {
+            resetUploadVideoForm();
+        });
+
+        uploadVideoBtn.addEventListener('click', async () => {
+            const file = uploadVideoInput.files[0];
+
+            if (!file) {
+                videoUploadMessage.textContent = 'Please select a video file to upload.';
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('video', file);
+
+            const res = await fetch('{DOMAIN}/upload', {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (!res.ok) {
+                videoUploadMessage.textContent = 'Video upload failed. Please try again.';
+                return;
+            }
+
+            const data = await res.json();
+            uploadedVideoPath = data.path;
+
+            videoUploadMessage.textContent = 'Video uploaded successfully!';
+            uploadVideoTitle.disabled = false;
+            uploadVideoDescription.disabled = false;
+            videoDetailsForm.style.display = 'block';
+            submitVideoBtn.disabled = false;
+        });
+
+        submitVideoBtn.addEventListener('click', async () => {
+            const title = uploadVideoTitle.value;
+            const description = uploadVideoDescription.value;
+            const currentUser = localStorage.getItem("current_user");
+
+            if (!uploadedVideoPath) {
+                alert('Can\'t find uploaded video path. Try uploading again.');
+                return;
+            }
+
+            if (!currentUser) {
+                alert('Please set a username first.');
+                return;
+            }
+
+            if (!title || !description) {
+                alert('Please fill in both the title and description.');
+                return;
+            }
+
+            const res = await fetch('{DOMAIN}/videos', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    title: title,
+                    description: description,
+                    creator: currentUser,
+                    path: uploadedVideoPath
+                }),
+            });
+
+            if (!res.ok) {
+                alert('Failed to submit video.');
+            }
+
+            const data = await res.json();
+
+            alert('Video submitted successfully!');
+            resetUploadVideoForm();
+        });
+
+        const resetUploadVideoForm = () => {
+            uploadVideoDialog.style.display = 'none';
+            videoDetailsForm.style.display = 'none';
+            videoUploadMessage.textContent = '';
+            uploadVideoTitle.textContent = '';
+            uploadVideoDescription.textContent = '';
+            uploadVideoTitle.disabled = true;
+            uploadVideoDescription.disabled = true;
+            submitVideoBtn.disabled = true;
+        }
+    </script>
+</body>
+
+</html>

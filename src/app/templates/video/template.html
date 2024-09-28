@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{CONTEXT.video.title} | {APPNAME}</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+        * {
+            font-family: "Roboto", sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0f0f0f;
+        }
+
+        .navbar_container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background-color: #0f0f0f;
+            z-index: 9999;
+        }
+
+        .navbar {
+            height: 100%;
+            width: 98%;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .logo_container {
+            text-decoration: none;
+            height: 100%;
+            width: fit-content;
+            display: flex;
+        }
+
+        .logo_img {
+            height: 80%;
+            aspect-ratio: 1;
+            margin: auto 0;
+        }
+
+        .logo_title {
+            color: white;
+            font-weight: 800;
+            font-size: 1.6rem;
+            letter-spacing: -1px;
+            margin: auto 0 auto 3px;
+        }
+
+        .user_controls {
+            height: 100%;
+            width: fit-content;
+            display: flex;
+        }
+
+        .user_settings_container {
+            height: 100%;
+            width: fit-content;
+            margin-left: 10px;
+        }
+
+        .user_profile_img_container {
+            height: 60%;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            position: relative;
+            top: 50%;
+            transform: translate(0, -50%);
+            overflow: hidden;
+        }
+
+        .user_icon {
+            width: 100%;
+            height: 100%;
+        }
+
+        .search_container {
+            position: relative;
+            top: 50%;
+            transform: translate(0, -50%);
+            max-width: 600px;
+            width: 100%;
+            height: 80%;
+            margin: 0 10px;
+            display: flex;
+            align-items: center;
+            border: 2px solid #2b2b2b;
+            border-radius: 25px;
+            padding: 5px;
+            overflow: hidden;
+        }
+
+        .search_input {
+            flex-grow: 1;
+            border: none;
+            outline: none;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 25px;
+            background-color: transparent;
+            color: #ffffff;
+        }
+
+        .search_btn {
+            position: relative;
+            transform: translate(20%, 0);
+            background-color: #2b2b2b;
+            height: 50px;
+            width: 50px;
+            min-width: 50px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .search-icon {
+            flex-shrink: 0;
+            position: relative;
+            transform: translate(-15%, 0);
+            height: 20px;
+            width: 20px;
+            color: white;
+        }
+
+        .video_container {
+            width: 65vw;
+            height: 65vh;
+            padding: 80px 30px;
+        }
+
+        .video_controller_wrapper {
+            width: 100%;
+            max-width: 1200px;
+            position: relative;
+            padding-top: 56.25%;
+            background-color: black;
+        }
+
+        .video_controller {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background-color: black;
+        }
+
+        .video_metadata_container {
+            width: 100%;
+            padding: 0 10px;
+            margin-top: 10px;
+            display: flex;
+            color: white;
+        }
+
+        .video_metadata {
+            margin-left: 10px;
+            width: 100%;
+        }
+
+        .video_title {
+            font-size: 24px;
+            width: 100%;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .video_creator_data {
+            margin-top: 5px;
+            height: 40px;
+            display: flex;
+        }
+
+        .video_creator_name {
+            line-height: 40px;
+            margin-left: 10px;
+            font-size: 16px;
+            width: 70%;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .video_creator_profile_picture_container {
+            margin: auto 0;
+            height: 30px;
+            min-height: 30px;
+            width: 30px;
+            min-width: 30px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .video_creator_profile_picture {
+            width: 100%;
+            height: 100%;
+        }
+
+        .video_views {
+            font-size: 14px;
+            width: 70%;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+
+        .video_description {
+            width: 90%;
+            word-wrap: break-word;
+            padding-bottom: 20px;
+            color: #a0a0a0;
+        }
+
+        .username_dialog {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .dialog {
+            background-color: #0f0f0f;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            text-align: center;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .username_dialog_text_field {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            background-color: transparent;
+            color: #ffffff;
+            border: none;
+            outline: none;
+        }
+
+        .dialog_actions {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .submit_btn {
+            padding: 10px 15px;
+            border: none;
+            background-color: #2ecc71;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .submit_btn:hover {
+            background-color: #27ae60;
+        }
+
+        .close_btn {
+            padding: 10px 15px;
+            border: none;
+            background-color: #a11f1f;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .close_btn:hover {
+            background-color: #881616;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="navbar_container">
+        <div class="navbar">
+            <a class="logo_container" href="{DOMAIN}">
+                <img class="logo_img" src="{STATIC_DIR}/bashtube_logo.png" alt="bashtube_logo.png">
+                <div class="logo_title">{APPNAME}</div>
+            </a>
+            <div class="search_container">
+                <input type="text" placeholder="Search" id="search_input" class="search_input" value="{CONTEXT.search.query}" >
+                <button class="search_btn" id="search_btn" onclick="navigateToSearchPage()">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                        class="search-icon">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" />
+                    </svg>
+                </button>
+            </div>
+            <div class="user_controls">
+                <div class="user_settings_container" id="user_settings_container">
+                    <div class="user_profile_img_container">
+                        <img class="user_icon" src="{STORAGE}/{CONTEXT.current_user.profile_picture}"
+                            alt="{STORAGE}/{CONTEXT.current_user.profile_picture}">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="video_container">
+        <div class="video_controller_wrapper">
+            <video class="video_controller" controls>
+                <source src="{STORAGE}/{CONTEXT.video.path}" type="{CONTEXT.video.mime_type}">
+                Video tag not supported by browser.
+            </video>
+        </div>
+        <div class="video_metadata_container">
+            <div class="video_metadata">
+                <div class="video_title">{CONTEXT.video.title}</div>
+                <div class="video_creator_data">
+                    <div class="video_creator_profile_picture_container">
+                        <img src="{STORAGE}/{CONTEXT.video.creator_profile_picture}"
+                            alt="{STORAGE}/{CONTEXT.video.creator_profile_picture}"
+                            class="video_creator_profile_picture">
+                    </div>
+                    <div class="video_creator_name">{CONTEXT.video.creator_username}</div>
+                </div>
+                <div class="video_views">{CONTEXT.video.views} views</div>
+                <div class="video_description">{CONTEXT.video.description}</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="username_dialog" class="username_dialog">
+        <div class="dialog">
+            <input type="text" id="username_field" class="username_dialog_text_field"
+                placeholder="Enter your username" />
+            <div class="dialog_actions">
+                <button class="submit_btn" id="submit_btn">Submit</button>
+                <button class="close_btn" id="close_btn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const searchInput = document.getElementById('search_input');
+
+        const navigateToSearchPage = () => {
+            if(searchInput.value.length < 1) return;
+            const query=btoa(searchInput.value);
+            window.location.href=`{DOMAIN}/search/?q=${query}`
+        }
+
+        const userSettings = document.getElementById('user_settings_container');
+        const dialog = document.getElementById('username_dialog');
+        const closeBtn = document.getElementById('close_btn');
+        const submitBtn = document.getElementById('submit_btn');
+        const usernameField = document.getElementById('username_field');
+
+        userSettings.addEventListener('click', () => {
+            if (localStorage.getItem("current_user") !== null) {
+                usernameField.value = localStorage.getItem("current_user");
+            } else {
+                usernameField.value = '';
+            }
+
+            dialog.style.display = 'flex';
+        });
+
+        closeBtn.addEventListener('click', () => {
+            dialog.style.display = 'none';
+        });
+
+        submitBtn.addEventListener('click', () => {
+            const username = usernameField.value;
+
+            if (username) {
+                dialog.style.display = 'none'
+                localStorage.setItem("current_user", username)
+            } else {
+                alert('Please enter a username');
+            }
+        });
+
+        window.addEventListener("load", async () => {
+            const newViewCount = {CONTEXT.video.views} + 1;
+            await fetch('{DOMAIN}/videos/{CONTEXT.video.id}', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    views: newViewCount
+                }),
+            });
+        })
+    </script>
+</body>
+
+</html>
