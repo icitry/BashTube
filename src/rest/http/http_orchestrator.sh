@@ -159,12 +159,30 @@ add_time_related_response_headers () {
     add_response_header "Expires" "$current_time"
 }
 
+add_cors_related_response_headers () {
+    add_response_header "Access-Control-Allow-Origin" "*"
+}
+
+add_options_method_headers () {
+    add_response_header "Connection" "keep-alive, close"
+    add_response_header "Access-Control-Allow-Origin" "*"
+    add_response_header "Access-Control-Allow-Methods" "POST, GET, PUT, DELETE, OPTIONS"
+    add_response_header "Access-Control-Allow-Headers" "*"
+    add_response_header "Access-Control-Max-Age" "86400"
+}
+
 respond_to_client () {
     local matched_pattern=$1
     
-    if [[ -z "$matched_pattern" ]]; then
+    if [[ "$REQUEST_METHOD" == "OPTIONS" ]]; then
         init_response
-        submit_response 404 ${HTTP_RESPONSE[404]}
+        add_options_method_headers 
+        submit_response 204 ${HTTP_RESPONSE[204]}
+    else
+        if [[ -z "$matched_pattern" ]]; then
+            init_response
+            submit_response 404 ${HTTP_RESPONSE[404]}
+        fi
     fi
 
     local -a response
@@ -183,8 +201,8 @@ respond_to_client () {
     fi
 
     add_response_header "$CONTENT_TYPE_HEADER_KEY" "${MIME_TYPE[$mime_type]}"
-
     add_time_related_response_headers
+    add_cors_related_response_headers
 
     send_response $code $is_file <<< "$body"
 }
